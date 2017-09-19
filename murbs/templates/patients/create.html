@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>Add a patient that is visiting for the very first time</h5>
+            </div>
+            <div class="ibox-content">
+                <form id="form" action="{% url 'patient-create' %}" method="post" class="wizard-big">
+                    <h1>Personal Details</h1>
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-6">
+
+                                {% csrf_token %}
+                                {{ form.non_field_errors }}
+
+                                {% for field in patient %}
+
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="capitalize" for="id_{{ field.name }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="help-block">
+                                                {% if field.errors %}
+                                                {% for error in  field.errors %}{{ error }}{% endfor %}
+                                                {% else %}
+                                                <small><em>{{ field.help_text }}</em></small>
+                                                {% endif %}
+                                            </span>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <h1>Contact Information</h1>
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {% for field in contact %}
+
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label class="capitalize" for="id_{{ field.name }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="help-block">
+                                                {% if field.errors %}
+                                                {% for error in  field.errors %}{{ error }}{% endfor %}
+                                                {% else %}
+                                                <small><em>{{ field.help_text }}</em></small>
+                                                {% endif %}
+                                            </span>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <h1>Next of Kin</h1>
+                    <fieldset>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                {% for field in nok %}
+
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="id_{{ field.name }}">{{ field.label }}</label>
+                                        {{ field }}
+                                        <span class="help-block">
+                                                {% if field.errors %}
+                                                {% for error in  field.errors %}{{ error }}{% endfor %}
+                                                {% else %}
+                                                <small><em>{{ field.help_text }}</em></small>
+                                                {% endif %}
+                                            </span>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function(){
+        $("#wizard").steps();
+        $("#form").steps({
+            bodyTag: "fieldset",
+            onStepChanging: function (event, currentIndex, newIndex)
+            {
+                // Always allow going backward even if the current step contains invalid fields!
+                if (currentIndex > newIndex)
+                {
+                    return true;
+                }
+
+                var form = $(this);
+
+                // Clean up if user went backward before
+                if (currentIndex < newIndex)
+                {
+                    // To remove error styles
+                    $(".body:eq(" + newIndex + ") label.error", form).remove();
+                    $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                }
+
+                // Disable validation on fields that are disabled or hidden.
+                form.validate().settings.ignore = ":disabled,:hidden";
+
+                // Start validation; Prevent going forward if false
+                return form.valid();
+            },
+            onStepChanged: function (event, currentIndex, priorIndex)
+            {
+
+            },
+            onFinishing: function (event, currentIndex)
+            {
+                var form = $(this);
+
+                // Disable validation on fields that are disabled.
+                // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+                form.validate().settings.ignore = ":disabled";
+
+                // Start validation; Prevent form submission if false
+                return form.valid();
+            },
+            onFinished: function (event, currentIndex)
+            {
+                var form = $(this);
+
+                // Submit form input
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action'),
+                    data: form.serialize(),
+                    cache: false,
+                    success: function(response){
+                        toastr.success(response.message);
+                    }
+                });
+            }
+        }).validate({
+                    errorPlacement: function (error, element)
+                    {
+                        element.before(error);
+                    },
+                    rules: {
+                        confirm: {
+                            equalTo: "#password"
+                        }
+                    }
+                });
+   });
+
+
+
+
+
+
+
+</script>
+{% endblock %}
+

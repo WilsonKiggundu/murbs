@@ -1,0 +1,62 @@
+{% block content %}
+
+<!-- Modal -->
+<div class="modal" id="dialog" tabindex="-1" role="dialog" aria-labelledby="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title" id="title">{{ modal_title }}</h1>
+            </div>
+            <div class="modal-body">
+                {% include 'form.html' with form=form %}
+            </div>
+            <div class="modal-footer">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-7">
+                    <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    $("#btnSubmit").click(function (event) {
+        event.preventDefault();
+
+        var form = $(this).closest("form");
+        $.ajax({
+            type: 'POST',
+            url: '/users/create/',
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                if (response.type == 'error') {
+                    toastr.error(response.message);
+                }else{
+                    toastr.success(response.message);
+                }
+            }
+          });
+    });
+
+    $("form").ajaxForm({
+        target: '#modal',
+        success: function(){
+
+        }
+    });
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% endblock %}

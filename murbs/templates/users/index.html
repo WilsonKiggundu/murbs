@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+
+{% block header_buttons %}
+<a href="{% url 'user-create' %}" data-toggle="modal" data-target="#modal" class="btn btn-primary">+ New User</a>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>List of all users in the system</h5>
+            </div>
+            <div class="ibox-content">
+
+                <table class="footable table table-stripped toggle-arrow-tiny">
+                    <thead>
+                    <tr>
+                        <th data-toggle="true">Name</th>
+                        <th>Email Address</th>
+                        <th>Username</th>
+                        <th data-hide="all">Bio</th>
+                        <th data-hide="all">Date of Birth</th>
+                        <th data-hide="all">Last Login</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+                        <td><a href="{% url 'user-details' user.username %}">{{ user.first_name }} {{ user.last_name
+                            }}</a></td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.profile.bio }}</td>
+                        <td>{{ user.profile.birth_date }}</td>
+                        <td>{{ user.last_login }}</td>
+                        <td class="text-center">{% if user.is_active %} <i class="fa fa-check text-navy"></i> {% endif
+                            %}
+                        </td>
+                        <td class="text-center">
+                            <a href=""><i class="fa fa-pencil"></i> </a>
+                            <a href=""><i class="fa fa-trash text-danger"></i> </a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <ul class="pagination pull-right"></ul>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('.footable').footable();
+    });
+
+
+
+
+
+</script>
+{% endblock %}
+

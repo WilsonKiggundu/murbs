@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block header_buttons %}
+<div class="btn-group mr-2" role="group" aria-label="button group">
+    <a href="{% url 'patient-create' %}" class="btn btn-primary">
+        + New Patient
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>List of all patients</h5>
+            </div>
+            <div class="ibox-content">
+
+                <table class="footable table table-stripped toggle-arrow-tiny">
+                    <thead>
+                    <tr>
+                        <th data-toggle="true">Name</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Telephone</th>
+                        <th>Email Address</th>
+                        <th>On Insurance?</th>
+                        <th>Address</th>
+                        <th>Next of Kin</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for patient in patients %}
+
+                    <tr>
+                        <td><a href="{% url 'patient/details' patient.id %}">{{ patient.name }}</a></td>
+                        <td>{{ patient.gender }}</td>
+                        <td></td>
+                        <td>{{ patient.telephone }}</td>
+                        <td>{{ patient.email_address }}</td>
+                        <td>{{ patient.is_insured }}</td>
+                        <td>{{ patient.address }}</td>
+                        <td></td>
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <ul class="pagination pull-right"></ul>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('.footable').footable();
+    });
+
+
+
+
+
+</script>
+{% endblock %}
+
+
