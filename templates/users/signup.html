@@ -1,0 +1,41 @@
+{% extends 'front_layout.html' %}
+
+{% block content %}
+<h2>Create an account</h2>
+<hr/>
+<form role="form" method="post" action="{% url 'register' %}">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Your name *</label>
+        <input type="text" class="form-control" name="name" value="{{ name }}"
+               required="true">
+        <span class="help-block">Wilson Kiggundu</span>
+
+    </div>
+    <div class="form-group">
+        <label>Email address *</label>
+        <input type="email" class="form-control" name="email" placeholder="" value="{{ email }}"
+               required="true">
+        <span class="help-block">someone@example.com</span>
+    </div>
+    <div class="form-group">
+        <label>Payroll number *</label>
+        <input type="text" class="form-control" name="payroll_number"
+               value="{{ payroll_number }}" required="true">
+    </div>
+    <div class="form-group">
+        <label>Password *</label>
+        <input type="password" name="password" class="form-control" required="true">
+        <span class="help-block">Keep it secure and not too simple to guess</span>
+    </div>
+    <button class="btn btn-primary block full-width m-b">Sign Up</button>
+    <div class="text-danger">{{ message }}</div>
+
+    <div class="text-center">
+        <a href="{% url 'login' %}">
+            <small>Do you have any account?</small>
+        </a>
+    </div>
+
+</form>
+{% endblock %}

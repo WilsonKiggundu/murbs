@@ -21,3 +21,8 @@
 .client-detail{
     height: auto !important;
 }
+
+.help-block{
+    font-size: 0.8em;
+    font-style: italic;
+}
