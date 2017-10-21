@@ -1,1 +1,53 @@
-<p>Here</p>
+<div class="modal-header">
+    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title" id="title">{{ title }}</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" id="form-create" role="form" action="{% url action %}" method="post">
+
+        {% include 'form.html' %}
+
+    </form>
+</div>
+
+<div class="modal-footer">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-7">
+        <button type="button" id="btnSubmit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    $("#btnSubmit").click(function(e){
+        var form_elements = $("form#form-create .form-control, form#form-create button");
+
+        var form = $("form#form-create");
+
+        form_elements.attr('readonly', true);
+        $(this).html('Please wait...');
+
+        $.ajax({
+            type: 'POST',
+            url: form.attr("action"),
+            data: form.serialize(),
+            cache: false,
+            success: function(response){
+                toastr.success(response.message);
+                location.reload();
+            },
+            error: function(error){
+                toastr.error(error);
+            }
+        });
+
+    })
+
+
+
+
+</script>
+{% endblock %}
